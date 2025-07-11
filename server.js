@@ -1,18 +1,13 @@
-// server.js
-const express = require('express');
-const cors = require('cors');
-const app = express();
-const PORT = process.env.PORT || 8081;
+const axios = require('axios');
 
-app.use(cors());
-app.use(express.json());
-app.use(express.static(__dirname)); // serve index.html
+app.post('/api/enquiries', async (req, res) => {
+  const enquiry = req.body;
 
-app.post('/api/enquiries', (req, res) => {
-  console.log('Received Enquiry:', req.body);
-  res.json({ message: 'Enquiry received! Thank you.' });
-});
-
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  try {
+    const muleResponse = await axios.post('https://student-enquiry-api-h2jtzl.5sc6y6-3.usa-e2.cloudhub.io/api/enquiry-webhook', enquiry);
+    res.json({ message: 'Enquiry sent to MuleSoft successfully!' });
+  } catch (err) {
+    console.error('Error forwarding to MuleSoft:', err.message);
+    res.status(500).json({ message: 'Failed to send to MuleSoft' });
+  }
 });
