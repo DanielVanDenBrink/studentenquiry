@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>University Enquiry</title>
+  <style>
+    body { font-family: Arial; padding: 20px; max-width: 600px; margin: auto; }
+    input, textarea, button { display: block; margin: 10px 0; width: 100%; padding: 10px; }
+  </style>
+</head>
+<body>
+
+  <h2>Submit Your Enquiry</h2>
+
+  <form id="enquiryForm">
+    <input type="text" id="name" placeholder="Your Name" value="Jane Doe" required />
+    <input type="email" id="email" placeholder="Your Email" value="jane.doe@example.com" required />
+    <input type="text" id="subject" placeholder="Subject" value="Admission Help" required />
+    <textarea id="message" placeholder="Type your enquiry here..." required>I need assistance with the admission process.</textarea>
+    <button type="submit">Send Enquiry</button>
+  </form>
+
+  <p id="responseMessage"></p>
+
+  <script>
+    document.getElementById('enquiryForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const data = {
+        name: document.getElementById('name').value,
+        email: document.getElementById('email').value,
+        subject: document.getElementById('subject').value,
+        message: document.getElementById('message').value
+      };
+
+      try {
+        const response = await fetch('/api/enquiries', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(data),
+          mode: 'cors'
+        });
+
+        const result = await response.json();
+        document.getElementById('responseMessage').innerText = result.message;
+      } catch (error) {
+        document.getElementById('responseMessage').innerText = 'Error sending enquiry. Check CORS or server status.';
+        console.error(error);
+      }
+    });
+  </script>
+
+</body>
+</html>
