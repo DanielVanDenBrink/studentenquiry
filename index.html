@@ -1,4 +1,61 @@
 <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Quick API Tester</title>
+  <style>
+    body   { font-family: system-ui, sans-serif; margin: 2rem; }
+    input  { width: 100%; padding: .6rem; font-size: 1rem; }
+    button { margin-top: .5rem; padding: .6rem 1.2rem;
+             font-size: 1rem; cursor: pointer; }
+    pre    { background:#f5f5f5; padding:1rem; white-space:pre-wrap;
+             word-break: break-all; border-left:4px solid #4a90e2; }
+  </style>
+</head>
+<body>
+
+  <h2>Test any API endpoint</h2>
+
+  <input id="url" type="text"
+         placeholder="Enter an API URL and click Send"
+         value="https://student-enquiry-api-h2jtzl.5sc6y6-3.usa-e2.cloudhub.io/api/v1/health">
+
+  <button id="sendBtn">Send</button>
+
+  <h3>Response ⬇</h3>
+  <pre id="output">(nothing yet)</pre>
+
+  <script>
+    const btn   = document.getElementById('sendBtn');
+    const urlIn = document.getElementById('url');
+    const out   = document.getElementById('output');
+
+    btn.addEventListener('click', async () => {
+      const url = urlIn.value.trim();
+      if (!url) { alert('Enter a URL first'); return; }
+
+      out.textContent = '⏳ Fetching…';
+
+      try {
+        const res = await fetch(url, { method: 'GET' /* change to POST if needed */ });
+        const txt = await res.text();
+
+        // Try JSON first – falls back to plain text
+        try {
+          const json = JSON.parse(txt);
+          out.textContent = JSON.stringify(json, null, 2);
+        } catch {      // not JSON
+          out.textContent = txt;
+        }
+      } catch (err) {
+        out.textContent = '❌ ' + err;
+      }
+    });
+  </script>
+
+</body>
+</html>
+<!DOCTYPE html>
 <html>
 <head>
   <title>University Enquiry</title>
